@@ -48,7 +48,10 @@ const fileStorage = multer.diskStorage({
   };
 
   
-
+  app.get('/home', (req, res) => {
+    res.status(200).json('Welcome, your app is working well');
+  })
+  
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
