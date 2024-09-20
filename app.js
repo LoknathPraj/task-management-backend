@@ -7,7 +7,7 @@ const multer = require('multer');
 const app = express();
 const corsOptions = {
   credentials: true,
-  origin: ['http://localhost:3000', 'http://localhost:80','https://task-management-react-employee.vercel.app','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app',"https://task-management-backend-orcin-phi.vercel.app"] // Whitelist the domains you want to allow
+  origin: ['http://localhost:3000', 'http://localhost:80','https://task-management-react-employee.vercel.app','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app',"https://task-management-backend-orcin-phi.vercel.app","https://task-management-react-employee.vercel.app"] // Whitelist the domains you want to allow
 };
 app.use(cors(corsOptions))
 
