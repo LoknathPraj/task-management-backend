@@ -7,7 +7,7 @@ const multer = require('multer');
 const app = express();
 const corsOptions = {
   credentials: true,
-  origin: ['http://localhost:3000', 'http://localhost:80','https://task-management-react-employee.vercel.app','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app'] // Whitelist the domains you want to allow
+  origin: ['http://localhost:3000', 'http://localhost:80','https://task-management-react-employee.vercel.app/*','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app/*',"https://task-management-backend-orcin-phi.vercel.app"] // Whitelist the domains you want to allow
 };
 app.use(cors(corsOptions))
 
@@ -61,12 +61,12 @@ app.use(
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     next();
-// });
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 
 
   app.use((error, req, res, next) => {
