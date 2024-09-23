@@ -77,7 +77,8 @@ app.use((req, res, next) => {
     res.status(status).json({ message: message, data: data });
   });
 
-mongoose.connect('mongodb+srv://loknathpandit555:Zom01uuJCK698JQa@cluster0.zczvwo4.mongodb.net/e-commerece').then(res=>{
+  const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/time-sheet"
+mongoose.connect(`${url}`).then(res=>{
     app.listen(8080);
 }).catch(err=>console.log(err))
 app.use('/api/order',orderRoutes)
