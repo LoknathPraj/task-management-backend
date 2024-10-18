@@ -216,13 +216,14 @@ function getDownloadsFolder() {
 
 exports.exportUser = async (req, res, next) => {
   const workbook = new excelJS.Workbook(); // Create a new workbook
-  const worksheet = workbook.addWorksheet("My Users"); // New Worksheet
-  const path = "./"; // Path to download excel
-  res.setHeader(
-    "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  );
-  res.setHeader("Content-Disposition", "attachment; filename=" + "users.xlsx");
+  const worksheet = workbook.addWorksheet('Worklog');
+  // New Worksheet
+  // const path = "./"; // Path to download excel
+  // res.setHeader(
+  //   "Content-Type",
+  //   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  // );
+  // res.setHeader("Content-Disposition", "attachment; filename=" + "users.xlsx");
 
   // Column for data in excel. key must match data key
   worksheet.columns = [
@@ -252,14 +253,22 @@ exports.exportUser = async (req, res, next) => {
     cell.font = { bold: true };
   });
   try {
-    const filename = getDownloadsFolder();
-    const data = await workbook.xlsx.writeFile(`${filename}`).then(() => {
-      res.send({
-        status: "success",
-        message: "file successfully downloaded",
-        path: `${filename}`,
-      });
-    });
+// Write the workbook to a buffer
+const buffer = await workbook.xlsx.writeBuffer();
+
+// Set response headers to trigger a download
+res.setHeader('Content-Disposition', 'attachment; filename=worklog.xlsx');
+res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+res.send(buffer);
+    // const filename = getDownloadsFolder();
+    // const data1 = await workbook.xlsx.write()
+    // const data = await workbook.xlsx.writeFile(`${filename}`).then(() => {
+    //   res.send({
+    //     status: "success",
+    //     message: "file successfully downloaded",
+    //     path: `${filename}`,
+    //   });
+    // });
   } catch (err) {
     console.log(err);
     res.send({
