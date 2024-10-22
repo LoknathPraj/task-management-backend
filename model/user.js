@@ -15,9 +15,19 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+
   status: {
     type: String,
     default: 'active'
+  },
+  department:[{
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Department",
+  }],
+  empId:{
+    type: String,
+    required: true,
   },
   role:{
     type:Number,

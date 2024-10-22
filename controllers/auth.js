@@ -14,14 +14,24 @@ exports.signup = (req, res, next) => {
   }
   const email = req.body.email;
   const name = req.body.name;
+  let departmentIds = req.body.departmentIds;
+  const empId = req.body.empId;
   const password = req.body.password;
+
+  if(!Array.isArray(departmentIds)){
+    departmentIds=[]
+  }
+  
+
   bcrypt
     .hash(password, 12)
     .then(hashedPw => {
       const user = new User({
         email: email,
         password: hashedPw,
-        name: name
+        name: name,
+        empId:empId,
+        department:departmentIds
       });
       if(req.body?.role)
       user.role=req.body.role

@@ -40,5 +40,5 @@ router.post(
   router.get("/getUserList", isAuth, workLogController.getUserList);
 
 
-  router.get("/downloadExcel", workLogController.exportUser);
+  router.get("/downloadExcel", workLogController.exportWorklog);
 module.exports = router;

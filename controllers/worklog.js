@@ -41,6 +41,7 @@ exports.AddWorklog = (req, res, next) => {
     location,
     task_description,
     username,
+    departmentId
   } = req.body;
   const worklog = new WorkLog({
     project_name: project_name,
@@ -52,6 +53,7 @@ exports.AddWorklog = (req, res, next) => {
     task_description: task_description,
     username: username,
     userId: userId,
+    departmentId:departmentId
   });
   worklog
     .save()
@@ -150,6 +152,7 @@ exports.updateWorklogById = (req, res, next) => {
     working_date,
     location,
     task_description,
+    departmentId
   } = req.body;
   const worklogId = req.params.workLogId;
   const errors = validationResult(req);
@@ -178,6 +181,7 @@ exports.updateWorklogById = (req, res, next) => {
       worklog.working_date = working_date;
       worklog.task_description = task_description;
       worklog.location = location;
+      worklog.departmentId=departmentId
       return worklog.save();
     })
     .then((result) => {
@@ -214,9 +218,25 @@ function getDownloadsFolder() {
   }
 }
 
-exports.exportUser = async (req, res, next) => {
+exports.exportWorklog = async (req, res, next) => {
   const workbook = new excelJS.Workbook(); // Create a new workbook
   const worksheet = workbook.addWorksheet('Worklog');
+
+  let departmentIds= req?.query?.departmentIds
+ 
+
+if(departmentIds &&departmentIds?.includes(',')){
+  departmentIds=departmentIds.split(",")
+}else if(departmentIds){
+  departmentIds=[departmentIds]
+}
+
+  let query={}
+  
+  if(Array.isArray(departmentIds)&&departmentIds?.length>0){
+    query={ _id: { $in: departmentIds } }
+  }
+  
   // New Worksheet
   // const path = "./"; // Path to download excel
   // res.setHeader(
@@ -237,7 +257,7 @@ exports.exportUser = async (req, res, next) => {
     { header: "Working Date", key: "working_date", width: 10 },
   ];
 
-  const userList = await WorkLog.find({})
+  const userList = await WorkLog.find(query)
     .select("-_id")
     .then((result) => result);
   let counter = 1;

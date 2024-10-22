@@ -43,6 +43,11 @@ const worklogSchema = new Schema(
       required: true,
       ref: "User",
     },
+    departmentId:{
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Department",
+    },
   },
   { timestamps: true }
 );
