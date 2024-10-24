@@ -26,6 +26,8 @@ const categoryRoutes = require('./routes/category');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const worklogRoutes = require('./routes/worklog');
+const projectRoutes = require('./routes/project');
+const departmentRoutes = require('./routes/department');
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'images');
@@ -77,15 +79,19 @@ app.use((req, res, next) => {
     res.status(status).json({ message: message, data: data });
   });
 
-  const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/time-sheet"
+  const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/time-sheet-dev"
 mongoose.connect(`${url}`).then(res=>{
     app.listen(8080);
 }).catch(err=>console.log(err))
+mongoose.set('toJSON', { virtuals: true });
+mongoose.set('toObject', { virtuals: true });
 app.use('/api/order',orderRoutes)
 app.use('/api/cart',cartRoutes)
 app.use('/api/product',productRoutes)
 app.use('/api',categoryRoutes)
 app.use('/api/feed', feedRoutes);
 app.use('/api/worklog',worklogRoutes)
+app.use('/api/project',projectRoutes)
+app.use('/api/department',departmentRoutes)
 app.use('/api/auth',authRoutes)
 
