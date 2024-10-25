@@ -1,24 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
     required: true,
-    // select: false 
+    // select: false
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
 
   status: {
     type: String,
-    default: 'active'
+    default: "active",
   },
   department:[{
     type: Schema.Types.ObjectId,
@@ -29,11 +29,28 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  role:{
-    type:Number,
-    default:10001
-  }
- 
+
+  mobile: {
+    type: String,
+    required: true,
+  },
+  // deptId: {
+  //   type: Number,
+  //   required: true,
+  // },
+  designationId: {
+    type: Number,
+    required: true,
+  },
+  joiningDate: {
+    type: Date,
+    required: true,
+  },
+
+  role: {
+    type: Number,
+    default: 10001,
+  },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);

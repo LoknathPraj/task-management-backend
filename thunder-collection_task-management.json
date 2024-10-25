@@ -1,0 +1,341 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "task-management",
+    "collectionId": "bb310924-87ec-4987-906e-34217ff5bac6",
+    "dateExported": "2024-10-09T13:15:24.191Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "3c463072-d33f-4707-bec4-5758347a5cb7",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "login",
+            "url": "https://task-management-backend-orcin-phi.vercel.app/api/auth/login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-08-04T03:31:26.638Z",
+            "modified": "2024-09-20T13:35:58.400Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n\n  \n   \"email\":\"ampcus1@gmail.com\",\n  \"password\":\"Test@123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "595bb93a-3ec5-4926-aecd-5ffe1a79ee04",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "SignUp",
+            "url": "https://task-management-backend-orcin-phi.vercel.app/api/auth/signup",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2024-08-04T03:31:33.994Z",
+            "modified": "2024-09-23T09:55:12.999Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"kavita.singh@ampcus.com\",\n  \"password\":\"nghVidsj\",\n   \"name\":\"kavita singh\",\n   \"role\":100001\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "d77e65af-f32d-47a5-9798-02259b2c651e",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "Add Task",
+            "url": "{{E_BASE_URL}}worklog/add-worklog",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-08-04T03:32:15.837Z",
+            "modified": "2024-08-05T11:37:05.723Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"project_name\": \"project_name\",\n    \"task_type\": \"task_type\",\n    \"working_hrs\": \"1hr 30 min\",\n    \"working_mins\":20,\n    \"working_date\": \"12/04/2024\",\n    \"location\": \"location\",\n    \"task_description\": \"task_description1ww\",\n    \"username\": \"username\"\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "4e256dab-7e81-466c-b8b1-3116d2e7687a",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "Update Worklog by id",
+            "url": "{{E_BASE_URL}}worklog/updateWorklogById/66aefaacb110a4bfb1948dbd",
+            "method": "POST",
+            "sortNum": 35000,
+            "created": "2024-08-04T03:59:56.581Z",
+            "modified": "2024-08-04T04:00:51.748Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"project_name\": \"LSR\",\n    \"task_type\": \"task_type\",\n    \"working_hrs\": \"1hr 30 min\",\n    \"working_date\": \"12/04/2024\",\n    \"location\": \"location\",\n    \"task_description\": \"task_description\",\n    \"username\": \"username\"\n\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "ee8340c5-c4a9-4d9b-ad62-7a88eee9f7f4",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "getWorkLog",
+            "url": "{{E_BASE_URL}}worklog/getAllWorklog?pageNo=2&pageSize=2",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-08-04T03:33:41.114Z",
+            "modified": "2024-08-04T03:51:24.994Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "params": [
+                {
+                    "name": "pageNo",
+                    "value": "2",
+                    "isPath": false
+                },
+                {
+                    "name": "pageSize",
+                    "value": "2",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "title",
+                        "value": "Accer laptop i8 16 GB RAM"
+                    },
+                    {
+                        "name": "price",
+                        "value": "59999"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Fast & easy computing Perfect budget laptop for students and working professionals that helps get jobs done quickly and efficiently thanks to the Intel Core i5-1135G7 processor. The latest Extensa Acer Laptop has been redesigned to be thinner and lighter than ever. With less than 20mm thin and with a weight of around 1.7kg, it can accompany you wherever you need to go The Extensa 15 will help improve your all-round video conferencing experience. It maintains a strong, consistent wireless signal with the strategically placed Wi-Fi 5 (802.11ac) wireless antenna and MU-MIMO. It also offers battery life upto 8 hours. Ease of storage: 4 GB of onboard DDR4 system memory, 4 GB of system memory with 512 GB SSD helps easily store and share important projects and data; The Laptop comes with Windows 11 Home and 1 year International Travellers Warranty.Call 1800-11-6677 to reach out to Acer customer support team for any queries Resolution: 1080p1280 X 720; Display Resolution Maximum: 1920 X 1080; Software Included: Webcam"
+                    },
+                    {
+                        "name": "category_id",
+                        "value": "642b8b6abf9cdec9a018f6cc"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "/Users/loknath/Desktop/51Z-CqWUN1L._SX679_.jpg",
+                        "isDisabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "749dd3ef-c6ed-4439-9a6c-7e05fd8e3368",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "getWorkLog ByUserid",
+            "url": "{{E_BASE_URL}}worklog/getWorkLogByUserId",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-08-04T03:39:44.239Z",
+            "modified": "2024-08-04T03:44:05.578Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "title",
+                        "value": "Accer laptop i8 16 GB RAM"
+                    },
+                    {
+                        "name": "price",
+                        "value": "59999"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Fast & easy computing Perfect budget laptop for students and working professionals that helps get jobs done quickly and efficiently thanks to the Intel Core i5-1135G7 processor. The latest Extensa Acer Laptop has been redesigned to be thinner and lighter than ever. With less than 20mm thin and with a weight of around 1.7kg, it can accompany you wherever you need to go The Extensa 15 will help improve your all-round video conferencing experience. It maintains a strong, consistent wireless signal with the strategically placed Wi-Fi 5 (802.11ac) wireless antenna and MU-MIMO. It also offers battery life upto 8 hours. Ease of storage: 4 GB of onboard DDR4 system memory, 4 GB of system memory with 512 GB SSD helps easily store and share important projects and data; The Laptop comes with Windows 11 Home and 1 year International Travellers Warranty.Call 1800-11-6677 to reach out to Acer customer support team for any queries Resolution: 1080p1280 X 720; Display Resolution Maximum: 1920 X 1080; Software Included: Webcam"
+                    },
+                    {
+                        "name": "category_id",
+                        "value": "642b8b6abf9cdec9a018f6cc"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "/Users/loknath/Desktop/51Z-CqWUN1L._SX679_.jpg",
+                        "isDisabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "fda65a7b-6325-4871-a4f0-7e976efccbef",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "Filter Task by User",
+            "url": "{{E_BASE_URL}}worklog/filterWorkLogByUserId/665ab4cf1bb30b4eb84d4332",
+            "method": "GET",
+            "sortNum": 55000,
+            "created": "2024-08-05T17:50:56.398Z",
+            "modified": "2024-08-05T17:52:58.816Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "title",
+                        "value": "Accer laptop i8 16 GB RAM"
+                    },
+                    {
+                        "name": "price",
+                        "value": "59999"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Fast & easy computing Perfect budget laptop for students and working professionals that helps get jobs done quickly and efficiently thanks to the Intel Core i5-1135G7 processor. The latest Extensa Acer Laptop has been redesigned to be thinner and lighter than ever. With less than 20mm thin and with a weight of around 1.7kg, it can accompany you wherever you need to go The Extensa 15 will help improve your all-round video conferencing experience. It maintains a strong, consistent wireless signal with the strategically placed Wi-Fi 5 (802.11ac) wireless antenna and MU-MIMO. It also offers battery life upto 8 hours. Ease of storage: 4 GB of onboard DDR4 system memory, 4 GB of system memory with 512 GB SSD helps easily store and share important projects and data; The Laptop comes with Windows 11 Home and 1 year International Travellers Warranty.Call 1800-11-6677 to reach out to Acer customer support team for any queries Resolution: 1080p1280 X 720; Display Resolution Maximum: 1920 X 1080; Software Included: Webcam"
+                    },
+                    {
+                        "name": "category_id",
+                        "value": "642b8b6abf9cdec9a018f6cc"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "/Users/loknath/Desktop/51Z-CqWUN1L._SX679_.jpg",
+                        "isDisabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "599277fb-e7f7-49dd-bbd5-e3f8879193a3",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "Delete Worklog by id",
+            "url": "{{E_BASE_URL}}worklog/deleteByWorklogId/66aef7d2cb488c4117a7e035",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-08-04T03:44:20.473Z",
+            "modified": "2024-08-04T03:45:06.176Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "title",
+                        "value": "Accer laptop i8 16 GB RAM"
+                    },
+                    {
+                        "name": "price",
+                        "value": "59999"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Fast & easy computing Perfect budget laptop for students and working professionals that helps get jobs done quickly and efficiently thanks to the Intel Core i5-1135G7 processor. The latest Extensa Acer Laptop has been redesigned to be thinner and lighter than ever. With less than 20mm thin and with a weight of around 1.7kg, it can accompany you wherever you need to go The Extensa 15 will help improve your all-round video conferencing experience. It maintains a strong, consistent wireless signal with the strategically placed Wi-Fi 5 (802.11ac) wireless antenna and MU-MIMO. It also offers battery life upto 8 hours. Ease of storage: 4 GB of onboard DDR4 system memory, 4 GB of system memory with 512 GB SSD helps easily store and share important projects and data; The Laptop comes with Windows 11 Home and 1 year International Travellers Warranty.Call 1800-11-6677 to reach out to Acer customer support team for any queries Resolution: 1080p1280 X 720; Display Resolution Maximum: 1920 X 1080; Software Included: Webcam"
+                    },
+                    {
+                        "name": "category_id",
+                        "value": "642b8b6abf9cdec9a018f6cc"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "/Users/loknath/Desktop/51Z-CqWUN1L._SX679_.jpg",
+                        "isDisabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "0ad111f3-651f-430e-93b3-b79817455914",
+            "colId": "bb310924-87ec-4987-906e-34217ff5bac6",
+            "containerId": "",
+            "name": "Get User list Copy",
+            "url": "{{E_BASE_URL}}worklog/getUserList",
+            "method": "GET",
+            "sortNum": 65000,
+            "created": "2024-08-05T17:51:48.554Z",
+            "modified": "2024-08-05T17:51:48.554Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "bearer {{TASK_TOKEN}}"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "title",
+                        "value": "Accer laptop i8 16 GB RAM"
+                    },
+                    {
+                        "name": "price",
+                        "value": "59999"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Fast & easy computing Perfect budget laptop for students and working professionals that helps get jobs done quickly and efficiently thanks to the Intel Core i5-1135G7 processor. The latest Extensa Acer Laptop has been redesigned to be thinner and lighter than ever. With less than 20mm thin and with a weight of around 1.7kg, it can accompany you wherever you need to go The Extensa 15 will help improve your all-round video conferencing experience. It maintains a strong, consistent wireless signal with the strategically placed Wi-Fi 5 (802.11ac) wireless antenna and MU-MIMO. It also offers battery life upto 8 hours. Ease of storage: 4 GB of onboard DDR4 system memory, 4 GB of system memory with 512 GB SSD helps easily store and share important projects and data; The Laptop comes with Windows 11 Home and 1 year International Travellers Warranty.Call 1800-11-6677 to reach out to Acer customer support team for any queries Resolution: 1080p1280 X 720; Display Resolution Maximum: 1920 X 1080; Software Included: Webcam"
+                    },
+                    {
+                        "name": "category_id",
+                        "value": "642b8b6abf9cdec9a018f6cc"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "/Users/loknath/Desktop/51Z-CqWUN1L._SX679_.jpg",
+                        "isDisabled": true
+                    }
+                ]
+            }
+        }
+    ],
+    "ref": "MMQAlaaj1Dar7sCPel_9ayqLoVFEevWnHp6TgeIJEcIJ9IjON9l1IMZJXpE-KTAkf4piOP20Js7bkQemjtaR6w"
+}

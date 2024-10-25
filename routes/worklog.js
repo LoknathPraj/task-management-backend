@@ -3,7 +3,6 @@ const workLogController = require("../controllers/worklog");
 const { body } = require("express-validator");
 const isAuth = require("../middleware/is-auth");
 const router = express.Router();
-
 router.post(
   "/add-worklog",
   isAuth,
@@ -20,7 +19,6 @@ router.post(
 );
 // body('username').notEmpty().withMessage('Username is required'),
 // body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
-
 router.get("/getAllWorklog", isAuth, workLogController.getAllWorkLog);
 router.get("/getWorkLogByUserId", isAuth, workLogController.getWorkLogByUserId);
 router.get(
@@ -30,15 +28,15 @@ router.get(
 );
 
 router.post(
-    "/updateWorklogById/:workLogId",
-    isAuth,
-    workLogController.updateWorklogById
-  );
-
-  router.get("/filterWorkLogByUserId/:userId", isAuth, workLogController.filterWorkLogByUserId);
-
-  router.get("/getUserList", isAuth, workLogController.getUserList);
-
+  "/updateWorklogById/:workLogId",
+  isAuth,
+  workLogController.updateWorklogById
+);
+router.get(
+  "/filterWorkLogByUserId/:userId",
+  isAuth,
+  workLogController.filterWorkLogByUserId
+);
 
   router.get("/downloadExcel", workLogController.exportWorklog);
 module.exports = router;

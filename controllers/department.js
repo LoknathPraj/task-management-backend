@@ -17,7 +17,9 @@ exports.AddDepartment = (req, res, next) => {
   department
     .save()
     .then((result) => {
-      res.status(201).json({ message: "Department Added successfully!",data:result });
+      res
+        .status(201)
+        .json({ message: "Department Added successfully!", data: result}, );
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -28,23 +30,22 @@ exports.AddDepartment = (req, res, next) => {
 };
 
 exports.GetDepartment = async (req, res, next) => {
- let departmentIds= req?.body?.departmentIds
- 
-let query={}
+  let departmentIds = req?.body?.departmentIds;
 
-if(Array.isArray(departmentIds)&&departmentIds?.length>0){
-  query={ _id: { $in: departmentIds } }
-}
+  let query = {};
 
-  Department.find(query).populate('projects')
+  if (Array.isArray(departmentIds) && departmentIds?.length > 0) {
+    query = { _id: { $in: departmentIds } };
+  }
+
+  Department.find(query)
+    .populate("projects")
     .then((result) => {
       if (result) {
-        res
-          .status(200)
-          .json({
-            message: "Department list fetched successfullt",
-            data: result,
-          });
+        res.status(200).json({
+          message: "Department list fetched successfullt",
+          data: result,
+        });
       } else {
         res
           .status(200)
@@ -59,27 +60,20 @@ if(Array.isArray(departmentIds)&&departmentIds?.length>0){
     });
 };
 
-
-  exports.deleteDepartment = async (req, res, next) => {
+exports.deleteDepartment = async (req, res, next) => {
   try {
-    let departmentId= req?.params?.departmentId
-      console.log(departmentId)
-      const department = await Department.findById(departmentId);
-      if (!department) {
-          return res
-          .status(404)
-          .json({ message: "Department not found"});
-      }
-      await Project.deleteMany({ department: departmentId });
-      await Department.findByIdAndDelete(departmentId);
-     return res
-      .status(200)
-      .json({ message: "Department deleted successfullt"});
-
+    let departmentId = req?.params?.departmentId;
+    console.log(departmentId);
+    const department = await Department.findById(departmentId);
+    if (!department) {
+      return res.status(404).json({ message: "Department not found" });
+    }
+    await Project.deleteMany({ department: departmentId });
+    await Department.findByIdAndDelete(departmentId);
+    return res.status(200).json({ message: "Department deleted successfullt" });
   } catch (error) {
     return res
-    .status(500)
-    .json({ message: 'Error deleting department and projects:'+ error});
-      
+      .status(500)
+      .json({ message: "Error deleting department and projects:" + error });
   }
-}
+};

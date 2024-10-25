@@ -77,3 +77,25 @@ exports.deleteProjectById = async (req, res, next) => {
       
   }
 }
+
+exports.GetProjectList = async (req, res, next) => {
+  Project.find({})
+    .then((result) => {
+      if (result) {
+        res.status(200).json({
+          message: "Project list fetched successfullt",
+          data: result,
+        });
+      } else {
+        res
+          .status(200)
+          .json({ message: "Project list fetched successfullt", data: [] });
+      }
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};

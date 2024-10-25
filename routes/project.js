@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { AddProject, GetProject,deleteProjectById } = require('../controllers/project');
+const { AddProject, GetProject,deleteProjectById, GetProjectList } = require('../controllers/project');
 // const { getProductByCatId } = require('../controllers/product');
 const isAuth = require('../middleware/is-auth');
 
@@ -14,6 +14,8 @@ router.post('/',isAuth,[
 
 router.get('/:deptId',isAuth, GetProject);
 router.get('/deleteProjectById/:projectId',isAuth, deleteProjectById);
+router.get('/',isAuth, GetProjectList);
+
 
 
 module.exports = router;
