@@ -8,6 +8,10 @@ const worklogSchema = new Schema(
       type: String,
       required: true,
     },
+    projectId: {
+      type: String,
+      required: true,
+    },
     task_type: {
       type: String,
       required: true,

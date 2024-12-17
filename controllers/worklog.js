@@ -5,6 +5,8 @@ const excelJS = require("exceljs");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
+
+
 exports.getAllWorkLog = async (req, res, next) => {
   const currentPage = req.query?.pageNo || 1;
   const perPage = req.query?.pageSize || 30;
@@ -24,6 +26,68 @@ exports.getAllWorkLog = async (req, res, next) => {
     });
 };
 
+
+exports.getTodaysWorkLog = async (req, res, next) => {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0); 
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999); 
+
+  try {
+    // Fetch work logs for today's date
+    const result = await WorkLog.find({
+      working_date: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    // Group work logs by userId to ensure unique users
+    const uniqueUsersMap = result.reduce((acc, worklog) => {
+      if (!acc[worklog.userId]) {
+        acc[worklog.userId] = [];
+      }
+      acc[worklog.userId].push(worklog);
+      return acc;
+    }, {});
+
+    // Prepare the stats for each user
+    const userStats = await Promise.all(
+      Object.keys(uniqueUsersMap).map(async (userId) => {
+        const worklogs = uniqueUsersMap[userId];
+        
+        // Calculate total hours and submissions for this user
+        let totalHours = 0;
+        let totalSubmissions = 0;
+
+        for (let worklog of worklogs) {
+          totalSubmissions += 1; // Every task is considered a submission
+          totalHours += parseFloat(worklog.working_hrs) + (parseFloat(worklog.working_mins) / 60);
+        }
+
+        // Get one of the worklogs for the user (all are for the same day, so any can be used)
+        const worklog = worklogs[0];
+
+        return {
+          ...worklog.toObject(),
+          totalSubmissions,
+          totalHours,
+          id: worklog.userId,  // Ensure each row has a unique `id`
+        };
+      })
+    );
+
+    res.status(200).json({
+      message: "Today's work logs fetched successfully!",
+      data: userStats,  // Full data for each unique user
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while fetching today's work logs.",
+      error: err,
+    });
+  }
+};
+
+
 exports.AddWorklog = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -35,6 +99,7 @@ exports.AddWorklog = (req, res, next) => {
   const {
     task_type,
     project_name,
+    projectId,
     working_hrs,
     working_mins,
     working_date,
@@ -43,8 +108,11 @@ exports.AddWorklog = (req, res, next) => {
     username,
     departmentId
   } = req.body;
+
+
   const worklog = new WorkLog({
     project_name: project_name,
+    projectId: projectId,
     task_type: task_type,
     working_hrs: working_hrs,
     working_mins: working_mins,

@@ -20,6 +20,7 @@ router.post(
 // body('username').notEmpty().withMessage('Username is required'),
 // body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
 router.get("/getAllWorklog", isAuth, workLogController.getAllWorkLog);
+router.get("/getTodaysWorklog", workLogController.getTodaysWorkLog);
 router.get("/getWorkLogByUserId", isAuth, workLogController.getWorkLogByUserId);
 router.get(
   "/deleteByWorklogId/:workLogId",

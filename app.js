@@ -79,7 +79,8 @@ app.use((req, res, next) => {
     res.status(status).json({ message: message, data: data });
   });
 
-  const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/dev-time-sheet"
+  // const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/dev-time-sheet"
+  const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/timesheet-tracker-prod"
 mongoose.connect(`${url}`).then(res=>{
     app.listen(8080);
 }).catch(err=>console.log(err))
