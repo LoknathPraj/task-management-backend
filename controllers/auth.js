@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 
 exports.signup = (req, res, next) => {
-  console.log('req.body: ', req.body)
   const errors = validationResult(req);
+  
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed.");
     error.statusCode = 422;
@@ -22,11 +22,11 @@ exports.signup = (req, res, next) => {
   // const deptId = req.body.deptId;
   const designationId = req.body.designationId;
   const joiningDate = req.body.joiningDate;
+  const adminId = req.body.adminId;
 
-  if(!Array.isArray(departmentIds)){
-    departmentIds=[]
+  if (!Array.isArray(departmentIds)) {
+    departmentIds = [];
   }
-  
 
   bcrypt
     .hash(password, 12)
@@ -39,10 +39,12 @@ exports.signup = (req, res, next) => {
         // deptId,
         designationId,
         joiningDate,
-        empId:empId,
-        department:departmentIds
+        empId: empId,
+        department: departmentIds,
+        adminId,
       });
       if (req.body?.role) user.role = req.body.role;
+      
       return user.save();
     })
     .then((result) => {
@@ -78,10 +80,15 @@ exports.login = (req, res, next) => {
         error.statusCode = 401;
         throw error;
       }
+
+      const adminId =
+        loadedUser?.role === 10001 ? loadedUser?.id : loadedUser?.adminId;
+
       const token = jwt.sign(
         {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
+          adminId: adminId,
         },
         "somesupersecretsecret",
         { expiresIn: "98h" }
@@ -90,6 +97,7 @@ exports.login = (req, res, next) => {
         token: token,
         userId: loadedUser._id.toString(),
         user: loadedUser,
+        adminId: adminId
       });
     })
     .catch((err) => {
@@ -101,16 +109,18 @@ exports.login = (req, res, next) => {
 };
 
 exports.getUserList = async (req, res, next) => {
-  User.find({})
+  
+  const adminId = req?.adminId;
+  User.find({ adminId: adminId })
     .select("-password")
     .then((result) => {
       res.status(200).json({
-        message: "User List feteched successfully!",
+        message: "User List fetched successfully!",
         data: result,
       });
     })
     .catch((err) => {
-      console.log(err);
+      
     });
 };
 

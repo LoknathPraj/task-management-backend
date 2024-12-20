@@ -13,7 +13,9 @@ exports.AddProject = (req, res, next) => {
   const deptId=req.body.deptId
   const project = new Project({
     name: name,
-    department:deptId
+    department:deptId,
+    adminId: req.adminId
+
   });
   project
     .save()
@@ -79,7 +81,7 @@ exports.deleteProjectById = async (req, res, next) => {
 }
 
 exports.GetProjectList = async (req, res, next) => {
-  Project.find({})
+  Project.find({adminId:req.adminId})
     .then((result) => {
       if (result) {
         res.status(200).json({

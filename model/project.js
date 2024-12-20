@@ -14,6 +14,11 @@ const projectSchema = new Schema(
         required: true,
         ref: "Department",
       },
+      adminId:{
+        type: Schema.Types.ObjectId,
+        
+        ref: "User",
+      },
     is_active: {
         type: Boolean,
         default: true

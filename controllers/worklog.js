@@ -8,10 +8,12 @@ const fs = require("fs");
 
 
 exports.getAllWorkLog = async (req, res, next) => {
+  
   const currentPage = req.query?.pageNo || 1;
-  const perPage = req.query?.pageSize || 30;
-  let count = await WorkLog.find().countDocuments();
-  WorkLog.find()
+  const perPage = req.query?.pageSize || 30000;
+
+  let count = await WorkLog.find({adminId:req.adminId}).countDocuments();
+  WorkLog.find({adminId:req.adminId})
     .skip((currentPage - 1) * perPage)
     .limit(perPage)
     .then((result) => {
@@ -22,7 +24,7 @@ exports.getAllWorkLog = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      
     });
 };
 
@@ -34,12 +36,12 @@ exports.getTodaysWorkLog = async (req, res, next) => {
   endOfDay.setHours(23, 59, 59, 999); 
 
   try {
-    // Fetch work logs for today's date
+    
     const result = await WorkLog.find({
       working_date: { $gte: startOfDay, $lte: endOfDay },
+      adminId: req.adminId
     });
 
-    // Group work logs by userId to ensure unique users
     const uniqueUsersMap = result.reduce((acc, worklog) => {
       if (!acc[worklog.userId]) {
         acc[worklog.userId] = [];
@@ -48,38 +50,34 @@ exports.getTodaysWorkLog = async (req, res, next) => {
       return acc;
     }, {});
 
-    // Prepare the stats for each user
     const userStats = await Promise.all(
       Object.keys(uniqueUsersMap).map(async (userId) => {
         const worklogs = uniqueUsersMap[userId];
         
-        // Calculate total hours and submissions for this user
         let totalHours = 0;
         let totalSubmissions = 0;
 
         for (let worklog of worklogs) {
-          totalSubmissions += 1; // Every task is considered a submission
+          totalSubmissions += 1; 
           totalHours += parseFloat(worklog.working_hrs) + (parseFloat(worklog.working_mins) / 60);
         }
-
-        // Get one of the worklogs for the user (all are for the same day, so any can be used)
         const worklog = worklogs[0];
 
         return {
           ...worklog.toObject(),
           totalSubmissions,
           totalHours,
-          id: worklog.userId,  // Ensure each row has a unique `id`
+          id: worklog.userId, 
         };
       })
     );
 
     res.status(200).json({
       message: "Today's work logs fetched successfully!",
-      data: userStats,  // Full data for each unique user
+      data: userStats,  
     });
   } catch (err) {
-    console.error(err);
+    
     res.status(500).json({
       message: "An error occurred while fetching today's work logs.",
       error: err,
@@ -107,6 +105,7 @@ exports.AddWorklog = (req, res, next) => {
     task_description,
     username,
     departmentId
+    
   } = req.body;
 
 
@@ -121,7 +120,8 @@ exports.AddWorklog = (req, res, next) => {
     task_description: task_description,
     username: username,
     userId: userId,
-    departmentId:departmentId
+    departmentId:departmentId,
+    adminId: req.adminId
   });
   worklog
     .save()
@@ -142,7 +142,7 @@ exports.AddWorklog = (req, res, next) => {
 exports.getWorkLogByUserId = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const userId = req.userId;
-  const perPage = 30;
+  const perPage = 30000;
   let count = await WorkLog.find({ userId: userId }).countDocuments();
   WorkLog.find({ userId: userId })
     .skip((currentPage - 1) * perPage)
@@ -155,7 +155,7 @@ exports.getWorkLogByUserId = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      
     });
 };
 
@@ -175,7 +175,7 @@ exports.filterWorkLogByUserId = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      
     });
 };
 
@@ -184,7 +184,7 @@ exports.deleteWorkLogById = (req, res, next) => {
 
   WorkLog.findById(workLogId)
     .then((worklog) => {
-      console.log(worklog);
+      
       if (!worklog) {
         const error = new Error("Could not find worklog.");
         error.statusCode = 404;
@@ -273,7 +273,7 @@ exports.getUserList = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      
     });
 };
 
@@ -358,7 +358,7 @@ res.send(buffer);
     //   });
     // });
   } catch (err) {
-    console.log(err);
+    
     res.send({
       status: "error",
       message: err?.message,

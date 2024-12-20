@@ -47,6 +47,10 @@ const worklogSchema = new Schema(
       required: true,
       ref: "User",
     },
+    adminId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     departmentId:{
       type: Schema.Types.ObjectId,
       required: true,

@@ -25,6 +25,10 @@ const userSchema = new Schema({
     required: true,
     ref: "Department",
   }],
+  adminId:{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   empId:{
     type: String,
     required: true,
