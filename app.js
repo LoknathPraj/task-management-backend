@@ -7,7 +7,7 @@ const multer = require('multer');
 const app = express();
 const corsOptions = {
   credentials: true,
-  origin: ['http://localhost:3000', 'http://localhost:80','https://task-management-react-employee.vercel.app','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app',"https://task-management-backend-orcin-phi.vercel.app","https://task-management-react-employee.vercel.app"] // Whitelist the domains you want to allow
+  origin: ['http://localhost:3000','http://localhost:3001', 'http://localhost:80','https://task-management-react-employee.vercel.app','https://task-management-react-52fm6wxnf-loknathprajs-projects.vercel.app',"https://task-management-backend-orcin-phi.vercel.app","https://task-management-react-employee.vercel.app"] // Whitelist the domains you want to allow
 };
 app.use(cors(corsOptions))
 
@@ -27,6 +27,7 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const worklogRoutes = require('./routes/worklog');
 const projectRoutes = require('./routes/project');
+const taskTypeRoutes = require('./routes/taskType');
 const departmentRoutes = require('./routes/department');
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -82,6 +83,7 @@ app.use((req, res, next) => {
   // const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/dev-time-sheet"
   const url="mongodb+srv://Ampcus:oL9lDzamnmrWkUi9@cluster0.nztkv.mongodb.net/timesheet-tracker-prod"
 mongoose.connect(`${url}`).then(res=>{
+  console.log("running on::"+8080)
     app.listen(8080);
 }).catch(err=>console.log(err))
 mongoose.set('toJSON', { virtuals: true });
@@ -93,6 +95,7 @@ app.use('/api',categoryRoutes)
 app.use('/api/feed', feedRoutes);
 app.use('/api/worklog',worklogRoutes)
 app.use('/api/project',projectRoutes)
+app.use('/api/task-type',taskTypeRoutes)
 app.use('/api/department',departmentRoutes)
 app.use('/api/auth',authRoutes)
 
