@@ -291,7 +291,7 @@ exports.exportWorklog = async (req, res, next) => {
   const worksheet = workbook.addWorksheet('Worklog');
 
   let departmentIds= req?.query?.departmentIds
- 
+  let userId= req?.query?.userId
 
 if(departmentIds &&departmentIds?.includes(',')){
   departmentIds=departmentIds.split(",")
@@ -300,9 +300,12 @@ if(departmentIds &&departmentIds?.includes(',')){
 }
 
   let query={}
+
   
-  if(Array.isArray(departmentIds)&&departmentIds?.length>0){
-    query={ departmentId: { $in: departmentIds } }
+  if(Array.isArray(departmentIds)&&departmentIds?.length>0 && userId){
+    query={ departmentId: { $in: departmentIds },userId:userId }
+  }else if(Array.isArray(departmentIds)&&departmentIds?.length>0 && !userId){
+    query={ departmentId: { $in: departmentIds }}
   }
 
   console.log(query)
@@ -328,7 +331,7 @@ if(departmentIds &&departmentIds?.includes(',')){
   ];
 
   const workLogs = await WorkLog.find(query)
-    .select("-departmentId")
+    // .select("-departmentId")//exclude
     .sort({ working_date: -1 })
     .then((result) => result);
   let counter = 1;
