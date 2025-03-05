@@ -302,8 +302,10 @@ if(departmentIds &&departmentIds?.includes(',')){
   let query={}
   
   if(Array.isArray(departmentIds)&&departmentIds?.length>0){
-    query={ _id: { $in: departmentIds } }
+    query={ departmentId: { $in: departmentIds } }
   }
+
+  console.log(query)
   
   // New Worksheet
   // const path = "./"; // Path to download excel
@@ -325,15 +327,17 @@ if(departmentIds &&departmentIds?.includes(',')){
     { header: "Working Date", key: "working_date", width: 10 },
   ];
 
-  const userList = await WorkLog.find(query)
-    .select("-_id")
+  const workLogs = await WorkLog.find(query)
+    .select("-departmentId")
+    .sort({ working_date: -1 })
     .then((result) => result);
   let counter = 1;
-  userList.forEach((user) => {
-    user.s_no = counter;
-    user.working_hrs = user.working_hrs + "." + user.working_mins + "hrs";
-    user.working_date = new Date(user.working_date).toLocaleDateString();
-    worksheet.addRow(user); // Add data in worksheet
+  console.log(workLogs)
+  workLogs.forEach((worklog) => {
+    worklog.s_no = counter;
+    worklog.working_hrs = worklog.working_hrs + "." + worklog.working_mins + "hrs";
+    worklog.working_date = new Date(worklog.working_date).toLocaleDateString();
+    worksheet.addRow(worklog); // Add data in worksheet
     counter++;
   });
   // Making first line in excel bold
