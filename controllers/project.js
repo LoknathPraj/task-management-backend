@@ -81,23 +81,35 @@ exports.deleteProjectById = async (req, res, next) => {
 }
 
 exports.GetProjectList = async (req, res, next) => {
-  Project.find({adminId:req.adminId})
-    .then((result) => {
-      if (result) {
-        res.status(200).json({
-          message: "Project list fetched successfullt",
-          data: result,
-        });
-      } else {
-        res
-          .status(200)
-          .json({ message: "Project list fetched successfullt", data: [] });
-      }
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+  const currentPage = parseInt(req.query?.page) || 1; 
+  const limit = req.query?.limit || 10;
+
+  try {
+
+    const count = await Project.find({ adminId: req.adminId }).countDocuments();
+    const result = await Project.find({ adminId: req.adminId })
+      .skip((currentPage - 1) * limit) 
+      .limit(limit); 
+
+    if (result) {
+      res.status(200).json({
+        message: "Project list fetched successfully",
+        data: result,
+        currentPage,
+        totalItems: count,
+      });
+    } else {
+      res.status(200).json({
+        message: "Project list fetched successfully",
+        data: [],
+        currentPage,
+        totalItems: count,
+      });
+    }
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 };

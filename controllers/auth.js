@@ -6,7 +6,7 @@ const User = require("../model/user");
 
 exports.signup = (req, res, next) => {
   const errors = validationResult(req);
-  
+
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed.");
     error.statusCode = 422;
@@ -44,7 +44,7 @@ exports.signup = (req, res, next) => {
         adminId,
       });
       if (req.body?.role) user.role = req.body.role;
-      
+
       return user.save();
     })
     .then((result) => {
@@ -109,19 +109,30 @@ exports.login = (req, res, next) => {
 };
 
 exports.getUserList = async (req, res, next) => {
-  
-  const adminId = req?.adminId;
-  User.find({ adminId: adminId })
-    .select("-password")
-    .then((result) => {
-      res.status(200).json({
-        message: "User List fetched successfully!",
-        data: result,
-      });
-    })
-    .catch((err) => {
-      
+  try {
+    const currentPage = parseInt(req.query?.page) || 1;
+    const limit = parseInt(req.query?.limit) || 10;
+    const adminId = req?.adminId;
+
+    // Get total count of documents
+    let count = await User.countDocuments({ adminId });
+
+    // Fetch users in descending order (latest first)
+    const users = await User.find({ adminId })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .skip((currentPage - 1) * limit)
+      .limit(limit)
+      .select("-password");
+
+    res.status(200).json({
+      message: "User List fetched successfully!",
+      data: users,
+      currentPage,
+      totalItems: count,
     });
+  } catch (err) {
+    next(err); // Pass the error to the error-handling middleware
+  }
 };
 
 exports.deleteUserById = (req, res, next) => {

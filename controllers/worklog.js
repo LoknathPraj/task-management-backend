@@ -8,35 +8,39 @@ const fs = require("fs");
 
 
 exports.getAllWorkLog = async (req, res, next) => {
-  
-  const currentPage = req.query?.pageNo || 1;
-  const perPage = req.query?.pageSize || 30000;
 
-  let count = await WorkLog.find({adminId:req.adminId}).countDocuments();
-  WorkLog.find({adminId:req.adminId})
-    .skip((currentPage - 1) * perPage)
-    .limit(perPage)
+  const currentPage = parseInt(req.query?.page) || 1;
+  const limit = req.query?.limit || 10;
+
+  console.log(currentPage, limit, "page and limit at get all worklog");
+
+  let count = await WorkLog.find({ adminId: req.adminId }).countDocuments();
+  WorkLog.find({ adminId: req.adminId })
+    .skip((currentPage - 1) * limit)
+    .sort({ working_date: -1 })
+    .limit(limit)
     .then((result) => {
       res.status(201).json({
-        message: "Task details feteched successfully!",
+        message: "Task details fetched successfully!",
         totalItems: count,
+        currentPage,
         data: result,
       });
     })
     .catch((err) => {
-      
+
     });
 };
 
 
 exports.getTodaysWorkLog = async (req, res, next) => {
   const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0); 
+  startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999); 
+  endOfDay.setHours(23, 59, 59, 999);
 
   try {
-    
+
     const result = await WorkLog.find({
       working_date: { $gte: startOfDay, $lte: endOfDay },
       adminId: req.adminId
@@ -53,12 +57,12 @@ exports.getTodaysWorkLog = async (req, res, next) => {
     const userStats = await Promise.all(
       Object.keys(uniqueUsersMap).map(async (userId) => {
         const worklogs = uniqueUsersMap[userId];
-        
+
         let totalHours = 0;
         let totalSubmissions = 0;
 
         for (let worklog of worklogs) {
-          totalSubmissions += 1; 
+          totalSubmissions += 1;
           totalHours += parseFloat(worklog.working_hrs) + (parseFloat(worklog.working_mins) / 60);
         }
         const worklog = worklogs[0];
@@ -67,17 +71,17 @@ exports.getTodaysWorkLog = async (req, res, next) => {
           ...worklog.toObject(),
           totalSubmissions,
           totalHours,
-          id: worklog.userId, 
+          id: worklog.userId,
         };
       })
     );
 
     res.status(200).json({
       message: "Today's work logs fetched successfully!",
-      data: userStats,  
+      data: userStats,
     });
   } catch (err) {
-    
+
     res.status(500).json({
       message: "An error occurred while fetching today's work logs.",
       error: err,
@@ -105,7 +109,7 @@ exports.AddWorklog = (req, res, next) => {
     task_description,
     username,
     departmentId
-    
+
   } = req.body;
 
 
@@ -120,7 +124,7 @@ exports.AddWorklog = (req, res, next) => {
     task_description: task_description,
     username: username,
     userId: userId,
-    departmentId:departmentId,
+    departmentId: departmentId,
     adminId: req.adminId
   });
   worklog
@@ -140,22 +144,24 @@ exports.AddWorklog = (req, res, next) => {
 };
 
 exports.getWorkLogByUserId = async (req, res, next) => {
-  const currentPage = req.query.page || 1;
+  const currentPage = parseInt(req.query?.page) || 1;
+  const limit = req.query?.limit || 10;
   const userId = req.userId;
-  const perPage = 30000;
   let count = await WorkLog.find({ userId: userId }).countDocuments();
   WorkLog.find({ userId: userId })
-    .skip((currentPage - 1) * perPage)
-    .limit(perPage)
+    .sort({ working_date: -1 })
+    .skip((currentPage - 1) * limit)
+    .limit(limit)
     .then((result) => {
       res.status(201).json({
         message: "Task List feteched successfully!",
         totalItems: count,
+        currentPage,
         data: result,
       });
     })
     .catch((err) => {
-      
+
     });
 };
 
@@ -175,7 +181,7 @@ exports.filterWorkLogByUserId = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      
+
     });
 };
 
@@ -184,7 +190,7 @@ exports.deleteWorkLogById = (req, res, next) => {
 
   WorkLog.findById(workLogId)
     .then((worklog) => {
-      
+
       if (!worklog) {
         const error = new Error("Could not find worklog.");
         error.statusCode = 404;
@@ -249,7 +255,7 @@ exports.updateWorklogById = (req, res, next) => {
       worklog.working_date = working_date;
       worklog.task_description = task_description;
       worklog.location = location;
-      worklog.departmentId=departmentId
+      worklog.departmentId = departmentId
       return worklog.save();
     })
     .then((result) => {
@@ -273,7 +279,7 @@ exports.getUserList = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      
+
     });
 };
 
@@ -290,26 +296,26 @@ exports.exportWorklog = async (req, res, next) => {
   const workbook = new excelJS.Workbook(); // Create a new workbook
   const worksheet = workbook.addWorksheet('Worklog');
 
-  let departmentIds= req?.query?.departmentIds
-  let userId= req?.query?.userId
+  let departmentIds = req?.query?.departmentIds
+  let userId = req?.query?.userId
 
-if(departmentIds &&departmentIds?.includes(',')){
-  departmentIds=departmentIds.split(",")
-}else if(departmentIds){
-  departmentIds=[departmentIds]
-}
+  if (departmentIds && departmentIds?.includes(',')) {
+    departmentIds = departmentIds.split(",")
+  } else if (departmentIds) {
+    departmentIds = [departmentIds]
+  }
 
-  let query={}
+  let query = {}
 
-  
-  if(Array.isArray(departmentIds)&&departmentIds?.length>0 && userId){
-    query={ departmentId: { $in: departmentIds },userId:userId }
-  }else if(Array.isArray(departmentIds)&&departmentIds?.length>0 && !userId){
-    query={ departmentId: { $in: departmentIds }}
+
+  if (Array.isArray(departmentIds) && departmentIds?.length > 0 && userId) {
+    query = { departmentId: { $in: departmentIds }, userId: userId }
+  } else if (Array.isArray(departmentIds) && departmentIds?.length > 0 && !userId) {
+    query = { departmentId: { $in: departmentIds } }
   }
 
   console.log(query)
-  
+
   // New Worksheet
   // const path = "./"; // Path to download excel
   // res.setHeader(
@@ -348,13 +354,13 @@ if(departmentIds &&departmentIds?.includes(',')){
     cell.font = { bold: true };
   });
   try {
-// Write the workbook to a buffer
-const buffer = await workbook.xlsx.writeBuffer();
+    // Write the workbook to a buffer
+    const buffer = await workbook.xlsx.writeBuffer();
 
-// Set response headers to trigger a download
-res.setHeader('Content-Disposition', 'attachment; filename=worklog.xlsx');
-res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-res.send(buffer);
+    // Set response headers to trigger a download
+    res.setHeader('Content-Disposition', 'attachment; filename=worklog.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
     // const filename = getDownloadsFolder();
     // const data1 = await workbook.xlsx.write()
     // const data = await workbook.xlsx.writeFile(`${filename}`).then(() => {
@@ -365,7 +371,7 @@ res.send(buffer);
     //   });
     // });
   } catch (err) {
-    
+
     res.send({
       status: "error",
       message: err?.message,
