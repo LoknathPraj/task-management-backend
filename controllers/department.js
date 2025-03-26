@@ -30,35 +30,37 @@ exports.AddDepartment = (req, res, next) => {
 };
 
 exports.GetDepartment = async (req, res, next) => {
+  const currentPage = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 10;
+  
   let departmentIds = req?.body?.departmentIds;
-
   let query = {};
 
-  if (Array.isArray(departmentIds) && departmentIds?.length > 0) {
+  if (Array.isArray(departmentIds) && departmentIds.length > 0) {
     query = { _id: { $in: departmentIds } };
   }
 
-  Department.find(query)
-    .populate("projects")
-    .then((result) => {
-      if (result) {
-        res.status(200).json({
-          message: "Department list fetched successfullt",
-          data: result,
-        });
-      } else {
-        res
-          .status(200)
-          .json({ message: "Department list fetched successfullt", data: [] });
-      }
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+  try {
+    const count = await Department.countDocuments(query);
+    const result = await Department.find(query)
+      .populate("projects")
+      .skip((currentPage - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      message: "Department list fetched successfully",
+      data: result,
+      currentPage,
+      totalItems: count,
     });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 };
+
 
 exports.deleteDepartment = async (req, res, next) => {
   try {

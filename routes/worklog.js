@@ -20,7 +20,7 @@ router.post(
 // body('username').notEmpty().withMessage('Username is required'),
 // body('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
 router.get("/getAllWorklog", isAuth, workLogController.getAllWorkLog);
-router.get("/getTodaysWorklog",isAuth, workLogController.getTodaysWorkLog);
+router.get("/getTodaysWorklog", isAuth, workLogController.getTodaysWorkLog);
 router.get("/getWorkLogByUserId", isAuth, workLogController.getWorkLogByUserId);
 router.get(
   "/deleteByWorklogId/:workLogId",
@@ -39,5 +39,24 @@ router.get(
   workLogController.filterWorkLogByUserId
 );
 
-  router.get("/downloadExcel", workLogController.exportWorklog);
+router.get("/downloadExcel", workLogController.exportWorklog);
+
+router.get("/getYearlyWorkHours", async (req, res) => {
+  try {
+    const { year } = req.query;
+    if (!year) {
+      return res.status(400).json({ message: "Year are required" });
+    }
+
+    const yearlyWorkData = await workLogController?.getYearlyWorkHours(parseInt(year));
+    res.json({ yearly_Statistics: yearlyWorkData });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+
+
+
+router.get("/getAllUsersTotalWorkHoursForMonthAndDay",isAuth,workLogController.getAllUsersTotalWorkHoursForMonthAndDay);
 module.exports = router;

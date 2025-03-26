@@ -81,23 +81,37 @@ exports.deleteTaskTypeById = async (req, res, next) => {
 }
 
 exports.GetAllTaskTypeList = async (req, res, next) => {
-  TaskType.find({adminId:req.adminId})
-    .then((result) => {
-      if (result) {
-        res.status(200).json({
-          message: "Task Type list fetched successfullt",
-          data: result,
-        });
-      } else {
-        res
-          .status(200)
-          .json({ message: "Task Type list fetched successfullt", data: [] });
-      }
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+  const currentPage = parseInt(req.query?.page) || 1; 
+  const limit = req.query?.limit || 10; 
+
+  try {
+
+    const count = await TaskType.find({ adminId: req.adminId }).countDocuments();
+
+    const result = await TaskType.find({ adminId: req.adminId })
+      .skip((currentPage - 1) * limit) 
+      .sort({ working_date: -1 })
+      .limit(limit); 
+
+    if (result) {
+      res.status(200).json({
+        message: "Task Type list fetched successfully",
+        data: result,
+        currentPage,
+        totalItems: count,
+      });
+    } else {
+      res.status(200).json({
+        message: "Task Type list fetched successfully",
+        data: [],
+        currentPage,
+        totalItems: count,
+      });
+    }
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err); 
+  }
 };

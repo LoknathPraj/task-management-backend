@@ -7,6 +7,7 @@ const worklogSchema = new Schema(
     project_name: {
       type: String,
       required: true,
+      default: 'Untitled Project'
     },
     projectId: {
       type: String,
