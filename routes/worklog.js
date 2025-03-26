@@ -41,20 +41,6 @@ router.get(
 
 router.get("/downloadExcel", workLogController.exportWorklog);
 
-router.get("/getTotalWorkHoursForMonth", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-    if (!month || !year) {
-      return res.status(400).json({ message: "Month and year are required" });
-    }
-
-    const totalHours = await workLogController?.getTotalWorkHoursForMonth(parseInt(month), parseInt(year));
-    res.json({ monthly_statistics: totalHours });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
 router.get("/getYearlyWorkHours", async (req, res) => {
   try {
     const { year } = req.query;
@@ -71,5 +57,6 @@ router.get("/getYearlyWorkHours", async (req, res) => {
 
 
 
-router.get("/getAllUsersTotalWorkHoursForMonthAndDay", workLogController.getAllUsersTotalWorkHoursForMonthAndDay);
+
+router.get("/getAllUsersTotalWorkHoursForMonthAndDay",isAuth,workLogController.getAllUsersTotalWorkHoursForMonthAndDay);
 module.exports = router;
