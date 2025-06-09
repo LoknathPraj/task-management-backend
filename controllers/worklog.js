@@ -7,42 +7,75 @@ const os = require("os");
 const fs = require("fs");
 const mongoose = require("mongoose");
 
+// exports.getAllWorkLog = async (req, res, next) => {
+
+//   const currentPage = parseInt(req.query?.page) || 1;
+//   const limit = req.query?.limit || 10;
+
+//   let count = await WorkLog.find({ adminId: req.adminId }).countDocuments();
+
+//   // Fetch unique locations from the database
+//   const uniqueLocations = await WorkLog.distinct('location', { adminId: req.adminId });
+
+//   WorkLog.find({ adminId: req.adminId })
+//     .skip((currentPage - 1) * limit)
+//     .sort({ working_date: -1 })
+//     .limit(limit)
+//     .then((result) => {
+//       // Count the number of locations in the result that are part of the unique locations
+//       const locationCount = result?.reduce((acc, worklog) => {
+//         if (uniqueLocations.includes(worklog.location)) {
+//           acc.add(worklog.location);
+//         }
+//         return acc;
+//       }, new Set()).size;
+
+//       res.status(201).json({
+//         message: "Task details fetched successfully!",
+//         totalItems: count,
+//         currentPage,
+//         locationCount,
+//         data: result,
+//       });
+//     })
+//     .catch((err) => {
+
+//     });
+// };
+
 exports.getAllWorkLog = async (req, res, next) => {
-
   const currentPage = parseInt(req.query?.page) || 1;
-  const limit = req.query?.limit || 10;
+  const limit = parseInt(req.query?.limit) || 10;
 
-  let count = await WorkLog.find({ adminId: req.adminId }).countDocuments();
+  const userId = req.query?.userId;
+  const projectId = req.query?.projectId;
 
-  // Fetch unique locations from the database
-  const uniqueLocations = await WorkLog.distinct('location', { adminId: req.adminId });
+  const query = { adminId: req.adminId };
 
-  WorkLog.find({ adminId: req.adminId })
-    .skip((currentPage - 1) * limit)
-    .sort({ working_date: -1 })
-    .limit(limit)
-    .then((result) => {
-      // Count the number of locations in the result that are part of the unique locations
-      const locationCount = result?.reduce((acc, worklog) => {
-        if (uniqueLocations.includes(worklog.location)) {
-          acc.add(worklog.location);
-        }
-        return acc;
-      }, new Set()).size;
+  if (userId) query.userId = userId;
+  if (projectId) query.projectId = projectId;
 
-      res.status(201).json({
-        message: "Task details fetched successfully!",
-        totalItems: count,
-        currentPage,
-        locationCount,
-        data: result,
-      });
-    })
-    .catch((err) => {
+  try {
+    const totalItems = await WorkLog.find(query).countDocuments();
+    const data = await WorkLog.find(query)
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * limit)
+      .limit(limit)
+      .populate("userId", "name") 
+      .populate("projectId", "title"); 
 
+    return res.status(201).json({
+      message: "Success",
+      data,
+      totalItems,
     });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something went wrong",
+      error: err.message,
+    });
+  }
 };
-
 
 exports.getTodaysWorkLog = async (req, res, next) => {
   const currentPage = parseInt(req.query?.page) || 1;
